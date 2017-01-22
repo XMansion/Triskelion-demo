@@ -1,0 +1,71 @@
+buildscript {
+	ext {
+		springBootVersion = '1.4.1.RELEASE'
+		keycloakVersion = "2.4.0.Final"
+	}
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		jcenter()
+		maven { url "http://repo.spring.io/plugins-release" }
+		maven { url "http://repo.spring.io/milestone" }
+		maven { url "https://plugins.gradle.org/m2/" }
+		maven { url "https://github.com/layerhq/releases-gradle/raw/master/releases" }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath "net.ltgt.gradle:gradle-apt-plugin:0.6"
+		classpath "org.springframework.build.gradle:propdeps-plugin:0.0.7"
+		classpath('se.transmode.gradle:gradle-docker:1.2')
+		classpath 'com.layer:git-repo-plugin:1.0.0'
+	}
+}
+
+configurations {
+	providedRuntime
+}
+
+apply plugin: 'java'
+apply plugin: 'propdeps'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'net.ltgt.apt'
+apply plugin: 'spring-boot'
+apply plugin: 'idea'
+apply plugin: 'git-repo'
+
+jar {
+	baseName = 'triskelion-demo'
+	version = '0.0.1-SNAPSHOT'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+repositories {
+	mavenCentral()
+	github("Anunay-Sinha", "git-repo", "master")
+}
+
+
+dependencies {
+	provided 'org.projectlombok:lombok:1.16.10'
+	apt 'org.projectlombok:lombok:1.16.10'
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-starter-data-rest')
+	compile("org.springframework.boot:spring-boot-starter-actuator")
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile('org.springframework.cloud:spring-cloud-starter-config')
+	compile("org.springframework.boot:spring-boot-devtools")
+	//compile files("/home/anunay/.gitRepos/Anunay-Sinha/git-repo/com/xmansion/triskelion-client/0.0.1/triskelion-client-0.0.1.jar")
+	compile 'com.xmansion:triskelion-client:0.0.1'
+
+}
+
+// The following line was required to cloud-starter-config. Need to check y?
+dependencyManagement {
+	imports {
+		mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.SR4'
+	}
+}
+
+
